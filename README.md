@@ -7,7 +7,7 @@ A premium, real-time RFID card management dashboard with advanced UI/UX interact
 
 ## 🌐 Live Demo
 
-**Access the dashboard at:** [http://157.173.101.159:9257/dashboard.html](http://157.173.101.159:9257/dashboard.html)
+**Access the dashboard at:** [http://157.173.101.159:9257](http://157.173.101.159:9257)
 
 ## ✨ Features
 
