@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RFID Premium Dashboard | Team Darius_Divine_Louise</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #8b5cf6;
+            --secondary: #3b82f6;
+            --accent: #10b981;
+            --background: #030712;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-main: #f3f4f6;
+            --text-dim: #9ca3af;
+            --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+            --orb-opacity: 0.15;
+            --error: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+        }
+
+        [data-theme="light"] {
+            --primary: #7c3aed;
+            --secondary: #2563eb;
+            --accent: #059669;
+            --background: #f8fafc;
+            --glass: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(0, 0, 0, 0.08);
+            --text-main: #1e293b;
+            --text-dim: #64748b;
+            --shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.1);
+            --orb-opacity: 0.08;
+            --error: #dc2626;
+            --warning: #d97706;
+            --info: #2563eb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem 1rem;
+        }
+
+        /* Animated Background Elements */
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at 50% 50%, var(--background), var(--background));
+            overflow: hidden;
+        }
+
+        .orb {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: var(--orb-opacity);
+            animation: move linear infinite;
+        }
+
+        .orb-1 {
+            background: var(--primary);
+            top: -10%;
+            left: -10%;
+            animation-duration: 25s;
+        }
+
+        .orb-2 {
+            background: var(--secondary);
+            bottom: -10%;
+            right: -10%;
+            animation-duration: 30s;
+        }
+
+        @keyframes move {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            33% {
+                transform: translate(100px, 100px) scale(1.1);
+            }
+
+            66% {
+                transform: translate(-50px, 150px) scale(0.9);
+            }
+
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+        }
+
+        .container {
+            max-width: 1100px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 1.5rem;
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Header Section */
+        .header {
+            grid-column: span 12;
+            background: var(--glass);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: var(--glass-border);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-main);
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background: var(--primary);
+            color: #fff;
+            transform: scale(1.05);
+        }
+
+        .theme-toggle:focus {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #fff, #9ca3af);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+            letter-spacing: -1px;
+        }
+
+        .header p {
+            color: var(--text-dim);
+            font-size: 1.1rem;
+            font-weight: 300;
+        }
+
+        .header strong {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* Status Bar */
+        .status-bar {
+            grid-column: span 12;
+            display: flex;
+            justify-content: space-around;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .status-card {
+            flex: 1;
+            min-width: 250px;
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            padding: 1.25rem;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
+        }
+
+        .status-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .status-icon {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #4b5563;
+            position: relative;
+        }
+
+        .status-icon.online {
+            background: #10b981;
+            box-shadow: 0 0 15px #10b981;
+        }
+
+        .status-icon.connecting {
+            background: #f59e0b;
+            box-shadow: 0 0 15px #f59e0b;
+        }
+
+        .status-icon.offline {
+            background: #ef4444;
+            box-shadow: 0 0 15px #ef4444;
+        }
+
+        .status-icon.pulse {
+            animation: statusPulse 2s infinite;
+        }
+
+        @keyframes statusPulse {
+            0% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.6;
+                transform: scale(1.2);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .status-info span {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .status-info strong {
+            font-size: 1rem;
+            color: var(--text-main);
+        }
+
+        /* Main Content Grid */
+        .card-info {
+            grid-column: span 5;
+            background: var(--glass);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .card-action {
+            grid-column: span 7;
+            background: var(--glass);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
+
+        h2 svg {
+            color: var(--primary);
+        }
+
+        /* RFID Card Visual */
+        .rfid-preview {
+            background: linear-gradient(135deg, #4c1d95, #1e3a8a);
+            border-radius: 16px;
+            padding: 2rem;
+            aspect-ratio: 1.6 / 1;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .rfid-preview.active {
+            background: linear-gradient(135deg, #10b981, #065f46);
+            box-shadow: 0 0 30px rgba(16, 185, 129, 0.5);
+            transform: scale(1.02);
+        }
+
+        .rfid-preview::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 150px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            transform: translate(50%, -50%);
+        }
+
+        .rfid-chip {
+            width: 45px;
+            height: 35px;
+            background: linear-gradient(135deg, #fbbf24, #d97706);
+            border-radius: 6px;
+            position: relative;
+        }
+
+        .rfid-chip::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 80%;
+            height: 80%;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            transform: translate(-50%, -50%);
+        }
+
+        .card-uid {
+            font-family: 'Courier New', monospace;
+            font-size: 1.4rem;
+            letter-spacing: 2px;
+            color: rgba(255, 255, 255, 0.9);
+            margin-top: 2rem;
+        }
+
+        .card-balance-box {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .card-balance-box .amount {
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        .card-balance-box .currency {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Form Styling */
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            font-size: 0.875rem;
+            color: var(--text-dim);
+            margin-bottom: 0.5rem;
+            margin-left: 0.5rem;
+        }
+
+        input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--glass-border);
+            padding: 1rem 1.25rem;
+            border-radius: 12px;
+            color: var(--text-main);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(0, 0, 0, 0.4);
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
+        }
+
+        input.error {
+            border-color: var(--error);
+        }
+
+        input.error:focus {
+            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
+        }
+
+        .error-message {
+            color: var(--error);
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+            margin-left: 0.5rem;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        #amount {
+            text-align: right;
+        }
+
+        /* Button Styling */
+        .btn {
+            width: 100%;
+            padding: 1.125rem;
+            border-radius: 12px;
+            border: none;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            position: relative;
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.5);
+            filter: brightness(1.1);
+        }
+
+        .btn:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            filter: grayscale(1);
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .btn:focus {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        .btn.loading {
+            pointer-events: none;
+        }
+
+        .btn .spinner {
+            display: none;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+
+        .btn.loading .spinner {
+            display: block;
+        }
+
+        .btn.loading .btn-text {
+            opacity: 0.7;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Log Section */
+        .log-container {
+            grid-column: span 12;
+            background: var(--glass);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        .log-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-clear {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-clear:hover {
+            background: rgba(239, 68, 68, 0.2);
+        }
+
+        .btn-clear:focus {
+            outline: 2px solid var(--error);
+            outline-offset: 2px;
+        }
+
+        .log-window {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 16px;
+            padding: 1.5rem;
+            height: 300px;
+            overflow-y: auto;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            border: 1px solid var(--glass-border);
+        }
+
+        .log-entry {
+            margin-bottom: 0.75rem;
+            padding: 0.5rem;
+            border-radius: 8px;
+            display: flex;
+            gap: 1rem;
+            border-left: 3px solid transparent;
+            background: rgba(255, 255, 255, 0.02);
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .log-entry.system {
+            border-left-color: #6366f1;
+        }
+
+        .log-entry.success {
+            border-left-color: #10b981;
+        }
+
+        .log-entry.error {
+            border-left-color: #ef4444;
+        }
+
+        .log-entry.info {
+            border-left-color: #3b82f6;
+        }
+
+        .timestamp {
+            color: var(--text-dim);
+            min-width: 85px;
+            font-size: 0.8rem;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 3rem;
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            padding-bottom: 2rem;
+            opacity: 0;
+            height: 0;
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            pointer-events: none;
+        }
+
+        .toast {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            animation: toastIn 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+            pointer-events: all;
+            min-width: 300px;
+            max-width: 400px;
+        }
+
+        .toast.success {
+            border-left: 4px solid var(--accent);
+        }
+
+        .toast.error {
+            border-left: 4px solid var(--error);
+        }
+
+        .toast.warning {
+            border-left: 4px solid var(--warning);
+        }
+
+        .toast.info {
+            border-left: 4px solid var(--info);
+        }
+
+        .toast.removing {
+            animation: toastOut 0.3s ease-out forwards;
+        }
+
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes toastOut {
+            to {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+        }
+
+        .toast-icon {
+            font-size: 1.25rem;
+        }
+
+        .toast-message {
+            flex: 1;
+            font-size: 0.9rem;
+        }
+
+        /* Confirmation Dialog */
+        .dialog-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        .dialog-overlay.show {
+            display: flex;
+        }
+
+        .dialog {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            animation: scaleIn 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .dialog h3 {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            color: var(--text-main);
+        }
+
+        .dialog p {
+            color: var(--text-dim);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .dialog-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .dialog-buttons button {
+            flex: 1;
+            padding: 0.75rem;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .dialog-buttons .btn-cancel {
+            background: var(--glass-border);
+            color: var(--text-main);
+        }
+
+        .dialog-buttons .btn-cancel:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .dialog-buttons .btn-confirm {
+            background: var(--error);
+            color: #fff;
+        }
+
+        .dialog-buttons .btn-confirm:hover {
+            filter: brightness(1.1);
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+
+            .card-info,
+            .card-action {
+                grid-column: span 12;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .toast-container {
+                right: 1rem;
+                left: 1rem;
+            }
+
+            .toast {
+                min-width: auto;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--glass-border);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-gradient">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Confirmation Dialog -->
+    <div class="dialog-overlay" id="dialogOverlay">
+        <div class="dialog">
+            <h3 id="dialogTitle">Confirm Action</h3>
+            <p id="dialogMessage">Are you sure you want to proceed?</p>
+            <div class="dialog-buttons">
+                <button class="btn-cancel" onclick="closeDialog()">Cancel</button>
+                <button class="btn-confirm" id="dialogConfirm">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Theme" aria-label="Toggle theme">
+                <svg id="themeIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
+            </button>
+            <h1>RFID Systems Intelligence</h1>
+            <p>Laboratory Dashboard | Team <strong>Darius_Divine_Louise</strong></p>
+        </header>
+
+        <!-- Status Grid -->
+        <div class="status-bar">
+            <div class="status-card">
+                <div class="status-icon pulse" id="wsStatus" aria-label="WebSocket status"></div>
+                <div class="status-info">
+                    <span>WebSocket Stream</span>
+                    <strong id="wsStatusText">Connecting...</strong>
+                </div>
+            </div>
+            <div class="status-card">
+                <div class="status-icon" id="mqttStatus" aria-label="MQTT status"></div>
+                <div class="status-info">
+                    <span>MQTT Broker</span>
+                    <strong id="mqttStatusText">Offline</strong>
+                </div>
+            </div>
+            <div class="status-card">
+                <div class="status-info">
+                    <span>Active Sessions</span>
+                    <strong id="clientCount" aria-live="polite">0</strong>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Interaction Section -->
+        <div class="card-info" id="scannedCardSection">
+            <h2>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <rect width="18" height="18" x="3" y="3" rx="2" />
+                    <path d="M7 7h10" />
+                    <path d="M7 12h10" />
+                    <path d="M7 17h10" />
+                </svg>
+                Current Asset
+            </h2>
+            <div id="currentCard">
+                <div class="rfid-preview" id="rfidVisual" role="img" aria-label="RFID card display">
+                    <div class="rfid-chip"></div>
+                    <div class="card-uid" id="displayUid" aria-live="polite">WAITING...</div>
+                    <div class="card-balance-box">
+                        <div>
+                            <div class="amount" id="displayBalance" aria-live="polite">0</div>
+                            <div class="currency">RWF BALANCE</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-action">
+            <h2>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2v20" />
+                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                </svg>
+                Top-Up Transaction
+            </h2>
+            <form id="topupForm" onsubmit="return handleTopup(event)">
+                <div class="form-group">
+                    <label for="uid">System Identification (UID)</label>
+                    <input type="text" id="uid" name="uid" placeholder="A1 B2 C3 D4" required pattern="[A-Fa-f0-9\s]+"
+                        title="Hexadecimal characters only" aria-describedby="uidError" oninput="validateUID()">
+                    <div class="error-message" id="uidError">Please enter a valid UID (hexadecimal characters only)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="amount">Credit Amount (RWF)</label>
+                    <input type="number" id="amount" name="amount" placeholder="Minimum 1 RWF" min="1" step="1" required
+                        aria-describedby="amountError" oninput="validateAmount()">
+                    <div class="error-message" id="amountError">Amount must be at least 1 RWF</div>
+                </div>
+                <button type="submit" class="btn" id="topupBtn" disabled aria-label="Execute transaction">
+                    <div class="spinner"></div>
+                    <span class="btn-text">Execute Transaction</span>
+                </button>
+            </form>
+        </div>
+
+        <!-- Activity Audit -->
+        <div class="log-container">
+            <div class="log-header">
+                <h2>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 3v18h18" />
+                        <path d="m19 9-5 5-4-4-3 3" />
+                    </svg>
+                    Operational Audit Trail
+                </h2>
+                <button class="btn-clear" onclick="confirmClearLog()" aria-label="Purge logs">Purge Logs</button>
+            </div>
+            <div class="log-window" id="log" role="log" aria-live="polite" aria-atomic="false">
+                <!-- Log entries will be injected here -->
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+        </footer>
+    </div>
+
+    <script>
+        // Theme Management
+        function toggleTheme() {
+            const html = document.documentElement;
+            const current = html.getAttribute('data-theme');
+            const next = current === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', next);
+            localStorage.setItem('rfid-theme', next);
+            updateThemeIcon();
+        }
+
+        function updateThemeIcon() {
+            const theme = document.documentElement.getAttribute('data-theme') || 'dark';
+            const icon = document.getElementById('themeIcon');
+            if (theme === 'dark') {
+                icon.innerHTML = '<circle cx="12" cy="12" r="4"/><path d="M12 3v1"/><path d="M12 20v1"/><path d="M3 12h1"/><path d="M20 12h1"/><path d="m18.364 5.636-.707.707"/><path d="m6.343 17.657-.707.707"/><path d="m5.636 5.636.707.707"/><path d="m17.657 17.657.707.707"/>';
+            } else {
+                icon.innerHTML = '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>';
+            }
+        }
+
+        // Initialize theme from localStorage
+        const savedTheme = localStorage.getItem('rfid-theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        updateThemeIcon();
+
+        // Toast Notification System
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+
+            const icons = {
+                success: '✓',
+                error: '✕',
+                warning: '⚠',
+                info: 'ℹ'
+            };
+
+            toast.innerHTML = `
+                <div class="toast-icon">${icons[type] || icons.info}</div>
+                <div class="toast-message">${message}</div>
+            `;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.add('removing');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Confirmation Dialog
+        let dialogCallback = null;
+
+        function showDialog(title, message, onConfirm) {
+            document.getElementById('dialogTitle').textContent = title;
+            document.getElementById('dialogMessage').textContent = message;
+            document.getElementById('dialogOverlay').classList.add('show');
+            dialogCallback = onConfirm;
+
+            document.getElementById('dialogConfirm').onclick = () => {
+                if (dialogCallback) dialogCallback();
+                closeDialog();
+            };
+        }
+
+        function closeDialog() {
+            document.getElementById('dialogOverlay').classList.remove('show');
+            dialogCallback = null;
+        }
+
+        // Input Validation
+        function validateUID() {
+            const input = document.getElementById('uid');
+            const error = document.getElementById('uidError');
+            const value = input.value.toUpperCase();
+
+            input.value = value;
+
+            const isValid = /^[A-F0-9\s]*$/.test(value);
+
+            if (!isValid && value.length > 0) {
+                input.classList.add('error');
+                error.classList.add('show');
+            } else {
+                input.classList.remove('error');
+                error.classList.remove('show');
+            }
+
+            validateForm();
+        }
+
+        function validateAmount() {
+            const input = document.getElementById('amount');
+            const error = document.getElementById('amountError');
+            const value = parseInt(input.value);
+
+            if (value < 1 && input.value !== '') {
+                input.classList.add('error');
+                error.classList.add('show');
+            } else {
+                input.classList.remove('error');
+                error.classList.remove('show');
+            }
+
+            validateForm();
+        }
+
+        function validateForm() {
+            const uidInput = document.getElementById('uid');
+            const amountInput = document.getElementById('amount');
+            const submitBtn = document.getElementById('topupBtn');
+
+            const uidValid = /^[A-F0-9\s]+$/.test(uidInput.value.trim()) && uidInput.value.trim().length > 0;
+            const amountValid = parseInt(amountInput.value) >= 1;
+
+            submitBtn.disabled = !(uidValid && amountValid);
+        }
+
+        // Configuration
+        const WS_URL = window.location.origin.replace(/^http/, 'ws');
+        let ws = null;
+        let reconnectInterval = null;
+        let currentCardData = null;
+
+        // Initialize WebSocket connection
+        function connectWebSocket() {
+            addLog('Initializing system stream...', 'system');
+            updateStatus('ws', 'connecting');
+
+            ws = new WebSocket(WS_URL);
+
+            ws.onopen = () => {
+                updateStatus('ws', 'online');
+                addLog('System link established', 'success');
+                if (reconnectInterval) {
+                    clearInterval(reconnectInterval);
+                    reconnectInterval = null;
+                }
+            };
+
+            ws.onmessage = (event) => {
+                try {
+                    const data = JSON.parse(event.data);
+                    handleMessage(data);
+                } catch (error) {
+                    console.error('System stream parse error:', error);
+                }
+            };
+
+            ws.onerror = (error) => {
+                updateStatus('ws', 'offline');
+                addLog('Link error detected', 'error');
+            };
+
+            ws.onclose = () => {
+                updateStatus('ws', 'offline');
+                addLog('Link lost. Retrying in 5s...', 'error');
+
+                if (!reconnectInterval) {
+                    reconnectInterval = setInterval(() => {
+                        addLog('Attempting reconnect...', 'system');
+                        connectWebSocket();
+                    }, 5000);
+                }
+            };
+        }
+
+        // Handle incoming messages
+        function handleMessage(data) {
+            if (data.type === 'connection') {
+                addLog(`${data.message}`, 'success');
+                return;
+            }
+
+            if (data.uid) {
+                if (data.balance !== undefined) {
+                    currentCardData = data;
+                    updateCurrentCard(data);
+                    addLog(`Detection: ${data.uid} | ${data.balance} RWF`, 'info');
+                    showToast(`Card detected: ${data.uid}`, 'info');
+                } else if (data.new_balance !== undefined) {
+                    currentCardData = { uid: data.uid, balance: data.new_balance };
+                    updateCurrentCard(currentCardData);
+                    addLog(`Success: Refill ${data.uid} | New: ${data.new_balance} RWF`, 'success');
+                    showToast(`Refill successful for ${data.uid}`, 'success');
+                }
+
+                // Auto-fill UID 
+                if (currentCardData && data.uid === currentCardData.uid) {
+                    document.getElementById('uid').value = data.uid;
+                    validateUID();
+                }
+            }
+
+            if (data.topic) {
+                updateStatus('mqtt', 'online');
+            }
+        }
+
+        // Update current card display
+        function updateCurrentCard(data) {
+            const visual = document.getElementById('rfidVisual');
+            const uidDisplay = document.getElementById('displayUid');
+            const balanceDisplay = document.getElementById('displayBalance');
+
+            visual.classList.add('active');
+            uidDisplay.textContent = data.uid;
+
+            setTimeout(() => visual.classList.remove('active'), 1000);
+
+            // Animate number change
+            animateValue(balanceDisplay, parseInt(balanceDisplay.textContent), data.balance || 0, 500);
+        }
+
+        function animateValue(obj, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                obj.innerHTML = Math.floor(progress * (end - start) + start);
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        // Processing Transaction
+        async function handleTopup(event) {
+            event.preventDefault();
+
+            const uid = document.getElementById('uid').value.toUpperCase().trim();
+            const amount = parseInt(document.getElementById('amount').value);
+            const btn = document.getElementById('topupBtn');
+
+            if (!uid || !amount || amount <= 0) {
+                showToast('Invalid input parameters', 'error');
+                return false;
+            }
+
+            btn.disabled = true;
+            btn.classList.add('loading');
+
+            try {
+                const response = await fetch('/topup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ uid, amount })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    addLog(`TX Sent: ${uid} | +${amount} RWF`, 'success');
+                    document.getElementById('amount').value = '';
+                    showToast(`Process initiated for ${uid}`, 'success');
+                    validateForm();
+                } else {
+                    addLog(`TX Failed: ${result.error}`, 'error');
+                    showToast('Process rejected', 'error');
+                }
+            } catch (error) {
+                addLog(`Network Failure: ${error.message}`, 'error');
+                showToast('Connectivity issues', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.classList.remove('loading');
+                validateForm();
+            }
+
+            return false;
+        }
+
+        // Audit Logging
+        function addLog(message, type = 'info') {
+            const logDiv = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.innerHTML = `<span class="timestamp">${timestamp}</span> <span class="message">${message}</span>`;
+
+            logDiv.insertBefore(entry, logDiv.firstChild);
+        }
+
+        function confirmClearLog() {
+            showDialog(
+                'Clear Audit Trail',
+                'Are you sure you want to purge all log entries? This action cannot be undone.',
+                clearLog
+            );
+        }
+
+        function clearLog() {
+            document.getElementById('log').innerHTML = '';
+            addLog('Audit trail purged', 'system');
+            showToast('Logs cleared successfully', 'info');
+        }
+
+        // Status Management
+        function updateStatus(type, state) {
+            const dot = document.getElementById(`${type}Status`);
+            const text = document.getElementById(`${type}StatusText`);
+
+            dot.className = `status-icon ${state}`;
+
+            if (state === 'connecting') {
+                dot.classList.add('pulse');
+                text.textContent = 'Connecting...';
+                text.style.color = '#f59e0b';
+            } else if (state === 'online') {
+                dot.classList.remove('pulse');
+                text.textContent = 'Operational';
+                text.style.color = '#10b981';
+            } else {
+                dot.classList.remove('pulse');
+                text.textContent = 'Disconnected';
+                text.style.color = '#ef4444';
+            }
+        }
+
+        // Health Monitoring
+        async function checkHealth() {
+            try {
+                const response = await fetch('/health');
+                const data = await response.json();
+                updateStatus('mqtt', data.mqtt_connected ? 'online' : 'offline');
+                document.getElementById('clientCount').textContent = data.websocket_clients;
+            } catch (error) {
+                console.error('Health diagnostic failed');
+            }
+        }
+
+        // Keyboard Navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeDialog();
+            }
+        });
+
+        window.onload = () => {
+            connectWebSocket();
+            setInterval(checkHealth, 10000);
+            addLog('Dashboard Core Initialized', 'success');
+            showToast('Dashboard ready', 'info');
+        };
+    </script>
+</body>
+
+</html>

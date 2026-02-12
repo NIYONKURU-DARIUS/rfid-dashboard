@@ -1,0 +1,24 @@
+{
+  "name": "rfid-topup-backend",
+  "version": "1.0.0",
+  "description": "RFID Card Top-Up System - Backend API Service",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "author": "Darius_Divine_Louise",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.22.1",
+    "mqtt": "^4.3.7",
+    "ws": "^8.13.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
